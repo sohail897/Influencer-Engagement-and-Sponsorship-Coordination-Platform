@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Ad Requests</title>
+
+</head>
+<body>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="alert-container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+        <h2>Manage Ad Requests</h2>
+        <a href="{{ url_for('create_ad_request') }}" class="create-btn">Create New Ad Request</a>
+
+        <ul class="ad-request-list">
+            {% for ad_request in ad_requests %}
+            <li>
+                <div>
+                    <strong>{{ ad_request.campaign.name }}</strong> - {{ ad_request.influencer.name }}
+                </div>
+                <div class="actions">
+                    <a href="{{ url_for('update_ad_request', ad_request_id=ad_request.ad_request_id) }}">Edit</a>
+                    {% if ad_request.status == 'Pending' %}
+                       <span class="badge badge-warning">Pending</span>
+                    {% elif ad_request.status == 'Accepted' %}
+                       <span class="badge badge-success">Accepted</span>
+                    {% elif ad_request.status == 'Rejected' %}
+                       <span class="badge badge-danger">Rejected</span>
+                    {% else %}
+                       <span class="badge badge-secondary">{{ ad_request.status }}</span>
+                    {% endif %}
+                    <form action="{{ url_for('delete_ad_request', ad_request_id=ad_request.ad_request_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this ad request?');">
+                        <button type="submit">Delete</button>
+                    </form>
+        
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</body>
+</html>

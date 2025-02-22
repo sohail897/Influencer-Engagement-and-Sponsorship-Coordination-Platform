@@ -1,0 +1,1 @@
+campaign/<int:campaign_id>/update

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sponsor Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="alert-container mt-3">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+        
+        <nav class="navbar navbar-expand-lg bg-light mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><b><font size="4">Welcome {{ sponsor.name }}</font></b></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/"><font size="3">Home</font></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/register"><font size="3">Register</font></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('manage_campaigns') }}"><font size="3">Manage Campaigns</font></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('create_ad_request') }}"><font size="3">Create Ad Request</font></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                        </li>
+                    </ul>
+                    <!-- Search form for influencers -->
+                    <form class="d-flex" role="search" action="{{ url_for('search_influencers') }}" method="GET">
+                        <input class="form-control me-2" type="search" name="query" placeholder="Search Influencers" aria-label="Search">
+                        <button class="btn btn-outline-success" type="submit">Search</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Campaigns Section -->
+        <h2 class="mt-5">Your Campaigns</h2>
+        <div class="list-group">
+            {% for campaign in campaigns %}
+            <div class="list-group-item">
+                <h5>{{ campaign.name }} ({{ campaign.visibility }})</h5>
+                <p>{{ campaign.description }}</p>
+                <a href="{{ url_for('view_campaign', campaign_id=campaign.campaign_id) }}" class="btn btn-info">View Details</a>
+                <a href="{{ url_for('update_campaign', campaign_id=campaign.campaign_id) }}" class="btn btn-warning">Edit</a>
+                <form method="POST" action="{{ url_for('delete_campaign', campaign_id=campaign.campaign_id) }}" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Ad Requests Section -->
+        <h2 class="mt-5">Manage Ad Requests</h2>
+
+        <ul class="list-group">
+            {% for ad_request in ad_requests %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ ad_request.campaign.name }}</strong> - {{ ad_request.influencer.name }}
+                </div>
+                <div class="d-flex align-items-center">
+                    {% if ad_request.status == 'Pending' %}
+                        <form method="POST" action="{{ url_for('accept_request', ad_request_id=ad_request.ad_request_id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-success btn-sm me-2">Accept</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('reject_request', ad_request_id=ad_request.ad_request_id) }}" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm me-2">Reject</button>
+                        </form>
+                    {% elif ad_request.status == 'Accepted' %}
+                        <span class="badge bg-success text-light me-2">Accepted</span>
+                    {% elif ad_request.status == 'Rejected' %}
+                        <span class="badge bg-danger text-light me-2">Rejected</span>
+                    {% else %}
+                        <span class="badge bg-secondary text-light me-2">{{ ad_request.status }}</span>
+                    {% endif %}
+                    <a href="{{ url_for('update_ad_request', ad_request_id=ad_request.ad_request_id) }}" class="btn btn-warning btn-sm me-2">Edit</a>
+                    <form method="POST" action="{{ url_for('delete_ad_request', ad_request_id=ad_request.ad_request_id) }}" onsubmit="return confirm('Are you sure you want to delete this ad request?');" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+       
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Ad Request</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Update Ad Request</h1>
+        <form method="POST" action="{{ url_for('update_ad_request', ad_request_id=ad_request.ad_request_id) }}">
+            <div class="form-group">
+                <label for="campaign_name">Campaign Name</label>
+                {%for campaign in campaigns%}
+                <input type="text" class="form-control" id="campaign_name" value="{{ campaign.name }}" readonly>
+                {%endfor%}
+            </div>
+            <div class="form-group">
+                <label for="messages">Messages</label>
+                <textarea class="form-control" id="messages" name="messages" rows="3">{{ ad_request.messages }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="requirements">Requirements</label>
+                <textarea class="form-control" id="requirements" name="requirements" rows="3">{{ ad_request.requirements }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="payment_amount">Payment Amount</label>
+                <input type="number" step="0.01" class="form-control" id="payment_amount" name="payment_amount" value="{{ ad_request.payment_amount }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Ad Request</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

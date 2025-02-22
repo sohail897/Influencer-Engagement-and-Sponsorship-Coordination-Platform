@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(120deg, #f6d365, #fda085);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            width: 48%;
+            padding: 10px;
+            font-size: 1rem;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/register" method="POST">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select name="role" id="role" class="form-control" required onchange="toggleRoleFields()">
+                <option value="">Select role</option>
+                <option value="sponsor">Sponsor</option>
+                <option value="admin">Admin</option>
+                <option value="influencer">Influencer</option>
+            </select>
+        </div>
+
+        <div id="sponsorFields" style="display: none;">
+            <div class="form-group">
+                <label for="sponsor_name">Sponsor Name:</label>
+                <input type="text" name="sponsor_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="industry">Industry:</label>
+                <input type="text" name="industry" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="budget">Budget:</label>
+                <input type="number" name="budget" class="form-control">
+            </div>
+        </div>
+
+        <div id="influencerFields" style="display: none;">
+            <div class="form-group">
+                <label for="influencer_name">Influencer Name:</label>
+                <input type="text" name="influencer_name" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="category">Category:</label>
+                <input type="text" name="category" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="niche">Niche:</label>
+                <input type="text" name="niche" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="reach">Reach:</label>
+                <input type="number" name="reach" class="form-control">
+            </div>
+        </div>
+        <div class="btn-container">
+            <button type="submit" class="btn btn-primary">Register</button>
+            <a href="/login" class="btn btn-secondary">Login</a>
+        </div>
+    </form>
+
+    <script>
+        function toggleRoleFields() {
+            const role = document.getElementById('role').value;
+            const sponsorFields = document.getElementById('sponsorFields');
+            const influencerFields = document.getElementById('influencerFields');
+
+            if (role === 'sponsor') {
+                sponsorFields.style.display = 'block';
+                influencerFields.style.display = 'none';
+            } else if (role === 'influencer') {
+                sponsorFields.style.display = 'none';
+                influencerFields.style.display = 'block';
+            } else {
+                sponsorFields.style.display = 'none';
+                influencerFields.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
